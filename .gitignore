@@ -58,3 +58,6 @@ dkms.conf
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Test Files
+./WiiUtils/tests
