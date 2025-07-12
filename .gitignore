@@ -54,3 +54,7 @@ dkms.conf
 # debug information files
 *.dwo
 *.o
+
+# Godot 4+ specific ignores
+.godot/
+/android/
