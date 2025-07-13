@@ -4,6 +4,7 @@
 void usage();
 int KCLDecode(FILE*, FILE*);
 int PMPDecode(FILE*, FILE*);
+int PMPEncode(FILE*, FILE*);
 
 int main(int argc, char* argv[])
 {
@@ -15,9 +16,17 @@ int main(int argc, char* argv[])
 
   FILE* infile;
   FILE* outfile;
-
-  infile = fopen(argv[2], "rb");
-  outfile = fopen(argv[3], "w");
+  
+  if(!strncmp(argv[1], "-pe", 3))
+  {
+    infile = fopen(argv[2], "r");
+    outfile = fopen(argv[3], "wb");
+  }
+  else
+  {
+    infile = fopen(argv[2], "rb");
+    outfile = fopen(argv[3], "w");
+  }
 
   if(infile == NULL ||
      outfile == NULL)
@@ -30,6 +39,8 @@ int main(int argc, char* argv[])
     KCLDecode(infile, outfile);
   else if(!strncmp(argv[1], "-pd", 3))
     PMPDecode(infile, outfile);
+  else if(!strncmp(argv[1], "-pe", 3))
+    PMPEncode(infile, outfile);
   else
   {
     usage();
@@ -47,4 +58,5 @@ void usage()
   printf("Usage: WiiUtil -flag input output\n");
   printf("-kd - KCL Decode\n");
   printf("-pd - PMP Decode\n");
+  printf("-pe - PMP Encode\n");
 }
