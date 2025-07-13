@@ -1,7 +1,6 @@
 # DerDer's PMPEdit
 
-PMPEdit is a graphical tool for editing the PMP files in Wii games. This
-repository in it's current state is incomplete.
+PMPEdit is a graphical tool for editing the PMP files in Wii games. This project is incomplete.
 
 ## WiiUtils
 
