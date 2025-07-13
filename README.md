@@ -7,3 +7,7 @@ repository in it's current state is incomplete.
 
 This program allows for the decoding of PMP and KCL files in order to be read
 by the editor.
+
+## WIP Preview
+
+https://youtu.be/skQpMllaFcg?si=PJdWWs45-IsHmctD
