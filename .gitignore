@@ -60,4 +60,4 @@ dkms.conf
 /android/
 
 # Test Files
-./WiiUtils/tests
+/tests/
