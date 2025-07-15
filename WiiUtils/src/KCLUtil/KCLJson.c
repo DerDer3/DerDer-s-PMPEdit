@@ -21,6 +21,8 @@ int write_kcl_json(FILE* file, faces* f, int count)
     else
       fprintf(file, "\t\t},\n");
   }
+  fprintf(file, "\t]\n");
+  fprintf(file, "}");
 
   return 0;
 }

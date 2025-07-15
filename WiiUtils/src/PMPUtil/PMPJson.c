@@ -66,6 +66,7 @@ int write_pmp_json(FILE* file, object* obj, u16 obj_count, route* rt, u16 rt_cou
 
 int obj_write(FILE* file, object obj)
 {
+  fprintf(file, "\t\t\t\"group\": %d,\n", obj.group_id);
   fprintf(file, "\t\t\t\"id\": %d,\n", obj.id);
   fprintf(file, "\t\t\t\"unknown_1\": %d,\n", obj.stuff_1);
   fprintf(file, "\t\t\t\"position\": [%f, %f, %f],\n", obj.pos.x, obj.pos.y, obj.pos.z);

@@ -12,6 +12,7 @@ extends Node3D
 
 @export var json_path := "user://kcl_tri_data.json"
 @export var json_path2 := "user://pmp_data.json"
+@export var WiiUtils = "../WiiUtils/WiiUtils.exe"
 
 var current_tab = 0
 var last_selected_mesh: MeshInstance3D = null
@@ -186,13 +187,13 @@ func _on_file_id_pressed(id: int) -> void:
 func _on_file_dialog_file_selected(path: String) -> void:
 	print("User selected:", path)
 	
-	var exe_path = ProjectSettings.globalize_path("res://KCL_DATA/a.exe")
-	var out_path = ProjectSettings.globalize_path("user://kcl_tri_data.json")
+	var out_path = ProjectSettings.globalize_path(json_path)
 	
-	var result = OS.execute(exe_path, [path, out_path])
+	var result = OS.execute(WiiUtils, ["-kd", path, out_path])
 	
 	if result == OK:
 		print("Decoder finished")
+		print(out_path)
 		
 		for child in mesh_holder.get_children():
 			child.queue_free()
@@ -209,14 +210,14 @@ func _on_file_dialog_file_selected(path: String) -> void:
 func _on_file_dialog_2_file_selected(path: String) -> void:
 	print("User selected:", path)
 	current_pmp = path
+
+	var out_path = ProjectSettings.globalize_path(json_path2)
 	
-	var exe_path = ProjectSettings.globalize_path("res://PMP_DATA/a.exe")
-	var out_path = ProjectSettings.globalize_path("user://pmp_data.json")
-	
-	var result = OS.execute(exe_path, [path, out_path])
+	var result = OS.execute(WiiUtils, ["-pd", path, out_path])
 	
 	if result == OK:
 		print("Decoder finished")
+		print(out_path)
 		
 	for child in pmp_holder.get_children():
 		child.queue_free()
@@ -258,12 +259,11 @@ func encode_pmp(out_file: String):
 	
 	file.close()
 
-	var exe_path = ProjectSettings.globalize_path("res://PMP_DATA/pmp.exe")
 	var infile = ProjectSettings.globalize_path(file_path)
 	
 	print(out_file)
 	
-	var result = OS.execute(exe_path, [infile, out_file])
+	var result = OS.execute(WiiUtils, ["-pe", infile, out_file])
 	current_pmp = out_file
 	print(infile)
 	

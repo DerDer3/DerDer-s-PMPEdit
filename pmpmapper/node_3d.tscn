@@ -15,6 +15,7 @@ script = ExtResource("1_a202f")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(5000, 0, 0, 0, 5000, 0, 0, 0, 5000, 0, 500, 1000)
 current = true
+far = 20000.0
 script = ExtResource("2_noarx")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
