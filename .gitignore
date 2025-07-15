@@ -58,6 +58,9 @@ dkms.conf
 # Godot 4+ specific ignores
 .godot/
 /android/
+PMPMapper.exe
+PMPMapper.console.exe
+PMPMapper.pck
 
 # Test Files
 /tests/

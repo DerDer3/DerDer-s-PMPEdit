@@ -13,7 +13,8 @@ config_version=5
 config/name="PMPMapper"
 run/main_scene="res://node_3d.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://bwnpknr2ewv37"
+config/windows_native_icon="res://icon.ico"
 
 [display]
 
