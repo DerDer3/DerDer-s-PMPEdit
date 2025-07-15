@@ -64,11 +64,20 @@ filters = PackedStringArray("*.pmp")
 
 [node name="Help" type="PopupMenu" parent="CanvasLayer/Panel/HBoxContainer/MenuBar"]
 
+[node name="Options_holder" type="VBoxContainer" parent="CanvasLayer"]
+offset_left = 5.0
+offset_top = 42.0
+offset_right = 255.0
+offset_bottom = 76.0
+
+[node name="PMP_Options" type="OptionButton" parent="CanvasLayer/Options_holder"]
+layout_mode = 2
+
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
 anchors_preset = 9
 anchor_bottom = 1.0
 offset_left = 5.0
-offset_top = 37.0
+offset_top = 80.0
 offset_right = 255.0
 grow_vertical = 2
 theme = SubResource("Theme_noarx")
@@ -116,10 +125,13 @@ transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0
 
 [node name="PMP_Objects_Holder" type="Node3D" parent="."]
 
+[node name="PMP_Points_Holder" type="Node3D" parent="."]
+
 [connection signal="id_pressed" from="CanvasLayer/Panel/HBoxContainer/MenuBar/File" to="." method="_on_file_id_pressed"]
 [connection signal="file_selected" from="CanvasLayer/Panel/HBoxContainer/MenuBar/File/FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="CanvasLayer/Panel/HBoxContainer/MenuBar/File/FileDialog2" to="." method="_on_file_dialog_2_file_selected"]
 [connection signal="file_selected" from="CanvasLayer/Panel/HBoxContainer/MenuBar/File/FileDialog3" to="." method="_on_file_dialog_3_file_selected"]
+[connection signal="item_selected" from="CanvasLayer/Options_holder/PMP_Options" to="." method="_on_pmp_options_item_selected"]
 [connection signal="item_selected" from="CanvasLayer/VBoxContainer/TabBar" to="." method="_on_tab_bar_item_selected"]
 [connection signal="pressed" from="CanvasLayer/VBoxContainer/SnapY" to="." method="_on_button_pressed"]
 [connection signal="item_edited" from="CanvasLayer/VBoxContainer/CurObjData" to="." method="_on_cur_obj_data_item_edited"]

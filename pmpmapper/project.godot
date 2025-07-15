@@ -13,6 +13,9 @@ config_version=5
 config/name="PMPMapper"
 run/main_scene="res://node_3d.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
+boot_splash/show_image=false
+boot_splash/fullsize=false
+boot_splash/image="uid://bwnpknr2ewv37"
 config/icon="uid://bwnpknr2ewv37"
 config/windows_native_icon="res://icon.ico"
 

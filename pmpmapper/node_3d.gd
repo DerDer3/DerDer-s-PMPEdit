@@ -5,17 +5,22 @@ extends Node3D
 @onready var file_dialog3 = $CanvasLayer/Panel/HBoxContainer/MenuBar/File/FileDialog3
 @onready var mesh_holder = $MeshHolder
 @onready var pmp_holder = $PMP_Objects_Holder
+@onready var pnt_holder = $PMP_Points_Holder
 @onready var tab_bar = $CanvasLayer/VBoxContainer/TabBar
+@onready var pmp_tab_bar = $CanvasLayer/Options_holder/PMP_Options
 @onready var cur_obj_tree = $CanvasLayer/VBoxContainer/CurObjData
 @onready var item_tree = $CanvasLayer/VBoxContainer/ObjList
 @onready var file = $CanvasLayer/Panel/HBoxContainer/MenuBar/File
+
+@onready var obj_container = $CanvasLayer/VBoxContainer
 
 @export var json_path := "user://kcl_tri_data.json"
 @export var json_path2 := "user://pmp_data.json"
 @export var WiiUtils = "../WiiUtils/WiiUtils.exe"
 
 var current_tab = 0
-var last_selected_mesh: MeshInstance3D = null
+var last_selected_obj: MeshInstance3D = null
+var last_selected_pnt: MeshInstance3D = null
 var current_pmp
 
 func _ready():
@@ -33,6 +38,8 @@ func _ready():
 	file.set_item_as_separator(2, true)
 	file.add_item("Save As       Ctrl + Shift + S", 3)
 	file.add_item("Save            Ctrl + S", 4)
+	
+	obj_container.visible = 0
 	
 	# cur_obj_tree.item_edited.connect(_on_tree_item_edited)
 	# print("Connected:", cur_obj_tree.is_connected("item_edited", Callable(self, "_on_tree_item_edited")))
@@ -119,8 +126,9 @@ func place_pmp_objects(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)
 	var data = JSON.parse_string(file.get_as_text())
 	var objects = data["objects"]
-
-	print("First object:", objects[0]["position"])
+	
+	if objects.size() != 0:
+		print("First object:", objects[0]["position"])
 	
 	var i = 0
 	
@@ -172,6 +180,56 @@ func place_pmp_objects(path: String) -> void:
 	
 	file.close()
 	make_item_tree()
+	
+func place_pmp_points(path: String) -> void:
+	var file = FileAccess.open(path, FileAccess.READ)
+	var data = JSON.parse_string(file.get_as_text())
+	var points = data["points"]
+
+	if points.size() != 0:
+		print("First point:", points[0]["position"])
+	
+	var i = 0
+	
+	for p in points:
+		var pos = p["position"]
+		
+		var mesh_instance = MeshInstance3D.new()
+		var sphere = SphereMesh.new()
+		sphere.radius = 10
+		sphere.height = 20
+		mesh_instance.mesh = sphere
+		
+		var collider = CollisionShape3D.new()
+		var shape = SphereShape3D.new()
+		shape.radius = 10
+		collider.shape = shape
+		collider.position = Vector3.ZERO
+		
+		var mat = StandardMaterial3D.new()
+		mat.albedo_color = Color.RED  # RGB purple
+		mesh_instance.set_surface_override_material(0, mat)
+		
+		mesh_instance.position = Vector3.ZERO
+		mesh_instance.name = "Sphere_%d" % i
+		
+		var area = Area3D.new()
+		area.input_ray_pickable = true
+		area.connect("input_event", Callable(self, "_on_point_clicked").bind(area))
+		area.add_child(mesh_instance)
+		area.add_child(collider)
+		area.set_meta("mesh_ref", mesh_instance)
+		area.set_meta("col_ref", collider)
+		
+		area.set_meta("position", p["position"])
+		area.set_meta("params", p["params"])
+		
+		area.global_position = Vector3(pos[0], pos[1], pos[2])
+		
+		pnt_holder.add_child(area)
+		i += 1
+	
+	file.close()
 
 func _on_file_id_pressed(id: int) -> void:
 	match id:
@@ -223,7 +281,11 @@ func _on_file_dialog_2_file_selected(path: String) -> void:
 		child.queue_free()
 	
 	place_pmp_objects(json_path2)
-	load_pmp_tabs(json_path2)
+	place_pmp_points(json_path2)
+	load_pmp_tabs()
+	pnt_holder.visible = 0
+	obj_container.visible = 1
+	load_pmp_object_tabs(json_path2)
 	
 func encode_pmp(out_file: String):
 	var file_path = "user://pmp_encode.txt"
@@ -274,7 +336,22 @@ func encode_pmp(out_file: String):
 func _on_file_dialog_3_file_selected(path: String) -> void:
 	encode_pmp(path)
 	
-func load_pmp_tabs(path: String) -> void:
+func load_pmp_tabs() -> void:
+	pmp_tab_bar.add_item("Objects")
+	pmp_tab_bar.add_item("Routes")
+	
+func _on_pmp_options_item_selected(index: int) -> void:
+	print(index)
+	if index == 0:
+		obj_container.visible = 1
+		pmp_holder.visible = 1
+		pnt_holder.visible = 0
+	if index == 1:
+		obj_container.visible = 0
+		pmp_holder.visible = 0
+		pnt_holder.visible = 1
+	
+func load_pmp_object_tabs(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)
 	var data = JSON.parse_string(file.get_as_text())
 	var objects = data["objects"]
@@ -324,10 +401,10 @@ func _on_object_clicked(camera, event, click_position, click_normal, shape_id, a
 			var mesh = area.get_meta("mesh_ref")
 			
 			# Reset previous highlight
-			if last_selected_mesh != null:
+			if last_selected_obj != null:
 				var default_mat := StandardMaterial3D.new()
 				default_mat.albedo_color = Color.PURPLE
-				last_selected_mesh.set_surface_override_material(0, default_mat)
+				last_selected_obj.set_surface_override_material(0, default_mat)
 			
 			var highlight_mat = StandardMaterial3D.new()
 			highlight_mat.albedo_color = Color.PURPLE
@@ -336,9 +413,29 @@ func _on_object_clicked(camera, event, click_position, click_normal, shape_id, a
 			mesh.set_surface_override_material(0, highlight_mat)
 			print("Clicked and highlighted: ", mesh.name)
 			
-			last_selected_mesh = mesh
+			last_selected_obj = mesh
 			
 			make_obj_tree(area)
+
+func _on_point_clicked(camera, event, click_position, clikc_normal, shape_id, area):
+	if event is InputEventMouseButton and event.pressed:
+		if area.has_meta("mesh_ref"):
+			var mesh = area.get_meta("mesh_ref")
+			
+			# Reset previous highlight
+			if last_selected_pnt != null:
+				var default_mat := StandardMaterial3D.new()
+				default_mat.albedo_color = Color.RED
+				last_selected_pnt.set_surface_override_material(0, default_mat)
+			
+			var highlight_mat = StandardMaterial3D.new()
+			highlight_mat.albedo_color = Color.RED
+			highlight_mat.emission_enabled = true
+			highlight_mat.emission = Color.ORANGE_RED * 1.5
+			mesh.set_surface_override_material(0, highlight_mat)
+			print("Clicked and highlighted: ", mesh.name)
+			
+			last_selected_pnt = mesh
 
 func make_obj_tree(area):
 	cur_obj_tree.clear()
@@ -470,10 +567,10 @@ func _on_obj_list_item_selected() -> void:
 			var mesh = area.get_meta("mesh_ref")
 				
 			# Reset previous highlight
-			if last_selected_mesh != null:
+			if last_selected_obj != null:
 				var default_mat := StandardMaterial3D.new()
 				default_mat.albedo_color = Color.PURPLE
-				last_selected_mesh.set_surface_override_material(0, default_mat)
+				last_selected_obj.set_surface_override_material(0, default_mat)
 				
 			var highlight_mat = StandardMaterial3D.new()
 			highlight_mat.albedo_color = Color.PURPLE
@@ -482,7 +579,7 @@ func _on_obj_list_item_selected() -> void:
 			mesh.set_surface_override_material(0, highlight_mat)
 			print("Clicked and highlighted: ", mesh.name)
 				
-			last_selected_mesh = mesh
+			last_selected_obj = mesh
 				
 			make_obj_tree(area)
 
@@ -539,10 +636,10 @@ func _on_add_pressed() -> void:
 		var mesh = area.get_meta("mesh_ref")
 				
 		# Reset previous highlight
-		if last_selected_mesh != null:
+		if last_selected_obj != null:
 			var default_mat := StandardMaterial3D.new()
 			default_mat.albedo_color = Color.PURPLE
-			last_selected_mesh.set_surface_override_material(0, default_mat)
+			last_selected_obj.set_surface_override_material(0, default_mat)
 			
 		var highlight_mat = StandardMaterial3D.new()
 		highlight_mat.albedo_color = Color.PURPLE
@@ -551,7 +648,7 @@ func _on_add_pressed() -> void:
 		mesh.set_surface_override_material(0, highlight_mat)
 		print("Clicked and highlighted: ", mesh.name)
 				
-		last_selected_mesh = mesh
+		last_selected_obj = mesh
 				
 		make_obj_tree(area)
 
