@@ -6,6 +6,7 @@ extends Node3D
 @onready var mesh_holder = $MeshHolder
 @onready var pmp_holder = $PMP_Objects_Holder
 @onready var pnt_holder = $PMP_Points_Holder
+@onready var rt_holder = $PMP_Route_Holder
 @onready var tab_bar = $CanvasLayer/VBoxContainer/TabBar
 @onready var pmp_tab_bar = $CanvasLayer/Options_holder/PMP_Options
 @onready var cur_obj_tree = $CanvasLayer/VBoxContainer/CurObjData
@@ -282,8 +283,10 @@ func _on_file_dialog_2_file_selected(path: String) -> void:
 	
 	place_pmp_objects(json_path2)
 	place_pmp_points(json_path2)
+	rt_holder.draw_routes(json_path2)
 	load_pmp_tabs()
 	pnt_holder.visible = 0
+	rt_holder.visible = 0
 	obj_container.visible = 1
 	load_pmp_object_tabs(json_path2)
 	
@@ -337,6 +340,7 @@ func _on_file_dialog_3_file_selected(path: String) -> void:
 	encode_pmp(path)
 	
 func load_pmp_tabs() -> void:
+	pmp_tab_bar.clear()
 	pmp_tab_bar.add_item("Objects")
 	pmp_tab_bar.add_item("Routes")
 	
@@ -346,10 +350,12 @@ func _on_pmp_options_item_selected(index: int) -> void:
 		obj_container.visible = 1
 		pmp_holder.visible = 1
 		pnt_holder.visible = 0
+		rt_holder.visible = 0
 	if index == 1:
 		obj_container.visible = 0
 		pmp_holder.visible = 0
 		pnt_holder.visible = 1
+		rt_holder.visible = 1
 	
 func load_pmp_object_tabs(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)

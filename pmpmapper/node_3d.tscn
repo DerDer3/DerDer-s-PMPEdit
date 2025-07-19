@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dd1kmp6t6bdyl"]
+[gd_scene load_steps=6 format=3 uid="uid://dd1kmp6t6bdyl"]
 
 [ext_resource type="Script" uid="uid://xmg8oybp5q05" path="res://node_3d.gd" id="1_a202f"]
 [ext_resource type="Script" uid="uid://6tb734uc6qn2" path="res://camera_3d.gd" id="2_noarx"]
+[ext_resource type="Script" uid="uid://drqxn1n5bkevs" path="res://pmp_route_holder.gd" id="3_a0tk4"]
 
 [sub_resource type="Theme" id="Theme_a0tk4"]
 default_font_size = 18
@@ -122,6 +123,9 @@ size_flags_vertical = 3
 transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 0, 0)
 
 [node name="MeshHolder" type="Node3D" parent="."]
+
+[node name="PMP_Route_Holder" type="Node3D" parent="."]
+script = ExtResource("3_a0tk4")
 
 [node name="PMP_Objects_Holder" type="Node3D" parent="."]
 
