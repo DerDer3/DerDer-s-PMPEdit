@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dd1kmp6t6bdyl"]
+[gd_scene load_steps=16 format=3 uid="uid://dd1kmp6t6bdyl"]
 
 [ext_resource type="Script" uid="uid://xmg8oybp5q05" path="res://node_3d.gd" id="1_a202f"]
 [ext_resource type="Script" uid="uid://6tb734uc6qn2" path="res://camera_3d.gd" id="2_noarx"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://54fxmpcjj0dg" path="res://group_dropdown.gd" id="3_jsk3o"]
 [ext_resource type="Script" uid="uid://cvun8y1j0p5dm" path="res://obj_list.gd" id="3_wc5p8"]
 [ext_resource type="Script" uid="uid://djv5641leek46" path="res://cur_obj_data.gd" id="4_4arys"]
+[ext_resource type="Script" uid="uid://b5j4erskwgrjf" path="res://edit.gd" id="4_cdqbm"]
 [ext_resource type="Script" uid="uid://diix4ipesag6d" path="res://add_obj.gd" id="5_6iypd"]
 [ext_resource type="Script" uid="uid://cubaxh1gns3wo" path="res://pmp_objects_holder.gd" id="5_wc5p8"]
 [ext_resource type="Script" uid="uid://d8byq87yafon" path="res://pmp_points_holder.gd" id="6_jsk3o"]
@@ -74,6 +75,9 @@ access = 2
 filters = PackedStringArray("*.pmp")
 
 [node name="Edit" type="PopupMenu" parent="CanvasLayer/Panel/MenuContainer/MenuBar"]
+script = ExtResource("4_cdqbm")
+
+[node name="GameSelection" type="PopupMenu" parent="CanvasLayer/Panel/MenuContainer/MenuBar/Edit"]
 
 [node name="Help" type="PopupMenu" parent="CanvasLayer/Panel/MenuContainer/MenuBar"]
 
@@ -154,6 +158,8 @@ script = ExtResource("6_jsk3o")
 [connection signal="file_selected" from="CanvasLayer/Panel/MenuContainer/MenuBar/File/ImportKCL" to="." method="_on_import_kcl_file_selected"]
 [connection signal="file_selected" from="CanvasLayer/Panel/MenuContainer/MenuBar/File/ImportPMP" to="." method="_on_pmp_import_file_selected"]
 [connection signal="file_selected" from="CanvasLayer/Panel/MenuContainer/MenuBar/File/SaveAs" to="." method="_on_save_as_file_selected"]
+[connection signal="id_pressed" from="CanvasLayer/Panel/MenuContainer/MenuBar/Edit" to="CanvasLayer/Panel/MenuContainer/MenuBar/Edit" method="_on_id_pressed"]
+[connection signal="id_pressed" from="CanvasLayer/Panel/MenuContainer/MenuBar/Edit/GameSelection" to="CanvasLayer/Panel/MenuContainer/MenuBar/Edit" method="_on_game_selection_id_pressed"]
 [connection signal="item_selected" from="CanvasLayer/Options_holder/PMP_Options" to="." method="_on_pmp_options_item_selected"]
 [connection signal="item_selected" from="CanvasLayer/Obj_Edit_Container/Group_Dropdown" to="." method="_on_tab_bar_item_selected"]
 [connection signal="pressed" from="CanvasLayer/Obj_Edit_Container/SnapY" to="." method="_on_button_pressed"]
