@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dd1kmp6t6bdyl"]
+[gd_scene load_steps=17 format=3 uid="uid://dd1kmp6t6bdyl"]
 
 [ext_resource type="Script" uid="uid://xmg8oybp5q05" path="res://node_3d.gd" id="1_a202f"]
 [ext_resource type="Script" uid="uid://6tb734uc6qn2" path="res://camera_3d.gd" id="2_noarx"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://djv5641leek46" path="res://cur_obj_data.gd" id="4_4arys"]
 [ext_resource type="Script" uid="uid://b5j4erskwgrjf" path="res://edit.gd" id="4_cdqbm"]
 [ext_resource type="Script" uid="uid://diix4ipesag6d" path="res://add_obj.gd" id="5_6iypd"]
+[ext_resource type="Script" uid="uid://ct1rey3jk0km3" path="res://undo.gd" id="5_imku0"]
 [ext_resource type="Script" uid="uid://cubaxh1gns3wo" path="res://pmp_objects_holder.gd" id="5_wc5p8"]
 [ext_resource type="Script" uid="uid://d8byq87yafon" path="res://pmp_points_holder.gd" id="6_jsk3o"]
 
@@ -80,6 +81,33 @@ script = ExtResource("4_cdqbm")
 [node name="GameSelection" type="PopupMenu" parent="CanvasLayer/Panel/MenuContainer/MenuBar/Edit"]
 
 [node name="Help" type="PopupMenu" parent="CanvasLayer/Panel/MenuContainer/MenuBar"]
+
+[node name="Undo" type="Button" parent="CanvasLayer/Panel/MenuContainer/MenuBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.634
+anchor_top = 0.459
+anchor_right = 0.634
+anchor_bottom = 0.459
+offset_left = -16.5
+offset_top = -16.983
+offset_right = 16.5
+offset_bottom = 17.017
+expand_icon = true
+script = ExtResource("5_imku0")
+
+[node name="Redo" type="Button" parent="CanvasLayer/Panel/MenuContainer/MenuBar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.794
+anchor_top = 0.5
+anchor_right = 0.794
+anchor_bottom = 0.5
+offset_left = -17.5
+offset_top = -18.5
+offset_right = 17.5
+offset_bottom = 15.5
+expand_icon = true
 
 [node name="Options_holder" type="VBoxContainer" parent="CanvasLayer"]
 offset_left = 5.0
@@ -160,6 +188,7 @@ script = ExtResource("6_jsk3o")
 [connection signal="file_selected" from="CanvasLayer/Panel/MenuContainer/MenuBar/File/SaveAs" to="." method="_on_save_as_file_selected"]
 [connection signal="id_pressed" from="CanvasLayer/Panel/MenuContainer/MenuBar/Edit" to="CanvasLayer/Panel/MenuContainer/MenuBar/Edit" method="_on_id_pressed"]
 [connection signal="id_pressed" from="CanvasLayer/Panel/MenuContainer/MenuBar/Edit/GameSelection" to="CanvasLayer/Panel/MenuContainer/MenuBar/Edit" method="_on_game_selection_id_pressed"]
+[connection signal="pressed" from="CanvasLayer/Panel/MenuContainer/MenuBar/Undo" to="CanvasLayer/Panel/MenuContainer/MenuBar/Undo" method="_on_pressed"]
 [connection signal="item_selected" from="CanvasLayer/Options_holder/PMP_Options" to="." method="_on_pmp_options_item_selected"]
 [connection signal="item_selected" from="CanvasLayer/Obj_Edit_Container/Group_Dropdown" to="." method="_on_tab_bar_item_selected"]
 [connection signal="pressed" from="CanvasLayer/Obj_Edit_Container/SnapY" to="." method="_on_button_pressed"]
