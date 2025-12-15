@@ -1,0 +1,3 @@
+[submodule "WiiUtils"]
+	path = WiiUtils
+	url = git@github.com:DerDer3/WiiUtils.git
